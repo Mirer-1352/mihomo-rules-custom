@@ -40,4 +40,4 @@ payload:
 - DOMAIN-KEYWORD,uptodown
 - DOMAIN-SUFFIX,flightradar24.com
 - DOMAIN-SUFFIX,ipleak.net
-- DOMAIN-KEYWORD,browserleaks
+- DOMAIN-SUFFIX,browserleaks.com
