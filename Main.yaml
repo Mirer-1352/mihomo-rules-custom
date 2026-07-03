@@ -170,6 +170,7 @@ proxy-groups:
   - {name: 🎬 影音娱乐, type: select, proxies: [🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区, 🟢 直连]}
   - {name: 🎮 游戏平台, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]} 
   - {name: ✉️ 社交媒体, type: select, proxies: [⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区, 🌎 其他地区, 🟢 直连]}
+  - {name: 📰 新闻媒体, type: select, proxies: [⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区, 🌎 其他地区, 🟢 直连]}
   - {name: 🪟 微软, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
   - {name: 🍎 Apple, type: select,proxies: [🟢 直连, ⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区, 🌎 其他地区]}
   - {name: 🗂 下载, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
@@ -244,6 +245,7 @@ rules:
   - RULE-SET,category-scholar-!cn,🔰 主流
   - RULE-SET,category-dev-cn,🟢 直连
   - RULE-SET,category-dev,🔰 主流
+  - RULE-SET,media_domain,📰 新闻媒体
   - RULE-SET,gfw_domain,🧱 GFW 
   - RULE-SET,category-ads-all,🚫 广告拦截 
   - RULE-SET,cn_domain,🟢 直连
@@ -277,6 +279,7 @@ rule-providers:
   github_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}  
   steam@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam@cn.mrs"}
   steam_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
+  media_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media.mrs"}
   category-games-cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-cn.mrs"}
   category-games-!cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-!cn.mrs"}
   category-game-platforms-download@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs"}
