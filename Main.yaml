@@ -1,0 +1,301 @@
+# 机场订阅，名称不能重复
+proxy-providers:
+  Main1:
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 🟢 直连
+    url: ""
+
+  Backup1:
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: 🟢 直连
+    url: ""
+
+      
+# 用于下载订阅时指定UA
+global-ua: clash.meta
+    
+# 全局配置
+port: 7890
+socks-port: 7891
+redir-port: 7892
+mixed-port: 7893
+tproxy-port: 7894
+bind-address: "*"
+ipv6: true
+mode: Rule
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+#interface-name: 
+  
+geodata-mode: false
+# GEO 文件加载模式（standard：标准加载器/memconservative：专为内存受限 (小内存) 设备优化的加载器 (默认值)）
+geodata-loader: standard
+geo-auto-update: false
+geo-update-interval: 48
+geox-url:
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+  
+# 控制面板
+external-controller: 0.0.0.0:9090
+secret: ""
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip"
+# 下载面板地址可更换：https://mirror.ghproxy.com/https://github.com/MetaCubeX/Yacd-meta/archive/gh-pages.zip
+
+# 匹配进程 always/strict/off
+find-process-mode: off #安卓设置为always
+keep-alive-idle: 600
+keep-alive-interval: 30
+disable-keep-alive: false #安卓设置为True
+
+# 策略组选择和fakeip缓存
+profile:
+  store-selected: true
+  store-fake-ip: true
+  
+# 流量嗅探
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 5228, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain:
+    - "+.v2ex.com"
+  skip-domain:
+    - "Mijia Cloud"
+    - "dlg.io.mi.com"
+    - "+.push.apple.com"
+    - "+.apple.com"
+  skip-dst-address:
+   - 10.10.2.0/24  
+# 代理模式
+tun:
+  enable: true
+  device: Meta
+  stack: mixed
+  mtu: 1500
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  udp-timeout: 300
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+  strict-route: true
+  
+# DNS模块
+dns:
+  enable: true
+  ipv6: true
+  listen: 0.0.0.0:1053
+  cache-algorithm: arc
+
+  respect-rules: false
+  enhanced-mode: fake-ip
+# 模式切换 redir-host / fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: fdfe:dcba:9876::/64
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - 'stun.miwifi.com'
+    - 'rule-set:direct_custom'
+#    - 'rule-set:category-game-platforms-download@cn_domain,steam@cn_domain,category-games-cn_domain'
+    - '+.lan'
+    - '+/announce'
+  nameserver:
+    - 'https://8.8.8.8/dns-query#⏱️ 延迟转移' #&ecs=/24&ecs-override=true
+    - 'https://1.1.1.1/dns-query#⏱️ 延迟转移' #&ecs=/24&ecs-override=true
+  proxy-server-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  direct-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    
+
+
+proxies:
+ - name: "🟢 直连"
+   type: direct
+   udp: true
+ - name: "⛔ 禁止"
+   type: reject
+   udp: true
+ - name: "DNS_Hijack"
+   type: dns
+ - name: "⛓️ tailscale"
+   type: tailscale
+   hostname: mihomo
+   auth-key: 
+   control-url: https://controlplane.tailscale.com
+   state-dir: ./tailscale
+   ephemeral: true
+   udp: true
+   accept-routes: true
+   ip-version: dual
+  
+# 策略组
+proxy-groups:
+  - {name: 🔰 主流, type: select, proxies: [⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区,  🌎 其他地区, 🟢 直连]}
+  - {name: 🕸️ 虚拟网段, type: select, proxies: [⛓️ tailscale, 🟢 直连]}
+  - {name: 🧱 GFW, type: select, proxies: [🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
+  - {name: 🗺 常用地区, type: select, proxies: [♻️ 香港自动, ♻️ 日本自动, ♻️ 台湾自动, ♻️ 新加坡自动, ♻️ 美国自动]}
+  - {name: 🌎 其他地区, type: select, use: [Main1,Backup1], exclude-filter: "美|日|港|台|新|禁止|直连|免费|官网|到期|剩余|机场|倍"}
+
+  
+  - {name: 🤖 AI, type: select, proxies: [🗺 常用地区, 🌎 其他地区,⏱️ 延迟转移, 🗄 容量转移, 🟢 直连]}   
+  - {name: 📺 哔哩哔哩, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]} 
+  - {name: 🎬 影音娱乐, type: select, proxies: [🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区, 🟢 直连]}
+  - {name: 🎮 游戏平台, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]} 
+  - {name: ✉️ 社交媒体, type: select, proxies: [⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区, 🌎 其他地区, 🟢 直连]}
+  - {name: 🪟 微软, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
+  - {name: 🍎 Apple, type: select,proxies: [🟢 直连, ⏱️ 延迟转移, 🗄 容量转移, 🗺 常用地区, 🌎 其他地区]}
+  - {name: 🗂 下载, type: select,proxies: [🟢 直连, 🗄 容量转移, ⏱️ 延迟转移, 🗺 常用地区, 🌎 其他地区]}
+  - {name: 🚫 广告拦截, type: select, proxies: [⛔ 禁止, 🟢 直连]}   
+  
+  - {name: ⏱️ 延迟转移, type: fallback , interval: 120, proxies: [🚀 专线节点, 🔽 低倍节点, 🗺 常用地区, 🌎 其他地区, 🛬 备用节点]}
+  - {name: 🗄 容量转移, type: fallback , interval: 60, proxies: [🔽 低倍节点, 🛬 备用节点, 🚀 专线节点]}
+  
+  - {name: ♻️ 香港自动, type: url-test, use: [Main1,Backup1], tolerance: 20, interval: 300, lazy: true, filter: "港", exclude-filter: "下载|IEPL|免费"}
+  - {name: ♻️ 日本自动, type: url-test, use: [Main1,Backup1], tolerance: 20, interval: 300, lazy: true, filter: "日", exclude-filter: "下载|IEPL|免费"} 
+  - {name: ♻️ 台湾自动, type: url-test, use: [Main1,Backup1], tolerance: 20, interval: 300, lazy: true, filter: "台", exclude-filter: "下载|IEPL|免费"} 
+  - {name: ♻️ 新加坡自动, type: url-test, use: [Main1,Backup1], tolerance: 20, interval: 300, lazy: true, filter: "新", exclude-filter: "下载|IEPL|免费"} 
+  - {name: ♻️ 美国自动, type: url-test, use: [Main1,Backup1], tolerance: 20, interval: 300, lazy: true, filter: "美", exclude-filter: "下载|IEPL|免费"}  
+  
+  - {name: 🚀 专线节点, type: url-test, use: [Main1], tolerance: 20, interval: 300, filter: "IEPL", exclude-filter: "x"}  
+  - {name: 🔽 低倍节点, type: url-test, use: [Backup1], tolerance: 20, interval: 120, filter: "0.01"} 
+  - {name: 🛬 备用节点, type: url-test, use: [Backup1], tolerance: 20, interval: 300, exclude-filter: "禁止|直连|免费|官网|到期|剩余|机场|倍"}
+
+rules:
+  - DST-PORT,53,DNS_Hijack
+  - DST-PORT,853,DNS_Hijack
+  - AND,((NETWORK,udp),(DST-PORT,443)),⛔ 禁止
+  - AND,((DOMAIN,www.baidu.com),(DST-PORT,80)),⛔ 禁止
+# --- 局域网与基础服务---
+#  - IP-CIDR,10.10.0.0/16,🕸️ 虚拟网段,no-resolve
+  - IP-CIDR,100.64.0.0/10,🕸️ 虚拟网段,no-resolve
+  - IP-CIDR6,fd7a::/48,🕸️ 虚拟网段,no-resolve
+  - IP-CIDR6,fe80::/10,🕸️ 虚拟网段,no-resolve
+#  - DOMAIN-SUFFIX,login.tailscale.com,🔰 主流
+  - DOMAIN-SUFFIX,tailscale.com,🟢 直连
+  - DOMAIN-SUFFIX,tailscale.io,🟢 直连
+# --- DNS 服务器 (防止回环) ---
+#  - IP-CIDR,119.29.29.29/32,🟢 直连,no-resolve
+#  - IP-CIDR,223.5.5.5/32,🟢 直连,no-resolve
+#  - IP-CIDR,202.204.105.1/32,🟢 直连,no-resolve
+#  - IP-CIDR,8.8.8.8/32,🔰 主流,no-resolve
+#  - IP-CIDR,1.1.1.1/32,🔰 主流,no-resolve
+# --- 自定义规则集 ---
+  - RULE-SET,private_ip,🟢 直连,no-resolve
+#  - RULE-SET,google_ip,🔰 主流,no-resolve
+  - RULE-SET,direct_custom,🟢 直连
+  - RULE-SET,proxy_custom,🔰 主流
+  - RULE-SET,download_custom,🗂 下载
+# ——在绕过中国大陆IP情况下大概率不需要这条——
+  - RULE-SET,cn_ip,🟢 直连,no-resolve
+  - RULE-SET,bilibili_domain,📺 哔哩哔哩
+  - RULE-SET,geolocation-cn,🟢 直连  
+# --- 应用分流 ---
+# --- 游戏与下载 (国内) ---
+  - RULE-SET,category-game-platforms-download@cn_domain,🟢 直连
+  - RULE-SET,steam@cn_domain,🟢 直连  
+  - RULE-SET,category-games-cn_domain,🟢 直连
+# --- 游戏与下载 (国外) ---
+  - RULE-SET,category-game-platforms-download_domain,🗂 下载
+  - RULE-SET,steam_domain,🎮 游戏平台
+  - RULE-SET,category-games-!cn_domain,🎮 游戏平台
+# --- 场景分流 ---
+  - RULE-SET,category-entertainment_domain,🎬 影音娱乐
+  - RULE-SET,netflix_ip,🎬 影音娱乐,no-resolve
+  - RULE-SET,ai_domain,🤖 AI  
+  - RULE-SET,google_domain,🔰 主流 
+  - RULE-SET,cloudflare_domain,🔰 主流
+  - RULE-SET,github_domain,🔰 主流  
+  - RULE-SET,twitter_ip,✉️ 社交媒体,no-resolve
+  - RULE-SET,telegram_ip,✉️ 社交媒体,no-resolve
+  - RULE-SET,chat_domain,✉️ 社交媒体
+  - RULE-SET,category-social-media-!cn_domain,✉️ 社交媒体
+  - RULE-SET,onedrive_domain,🗂 下载 
+  - RULE-SET,microsoft_domain,🪟 微软
+  - RULE-SET,apple_domain,🍎 Apple  
+  - RULE-SET,category-porn,🔰 主流
+  - RULE-SET,category-scholar-!cn,🔰 主流
+  - RULE-SET,category-dev-cn,🟢 直连
+  - RULE-SET,category-dev,🔰 主流
+  - RULE-SET,gfw_domain,🧱 GFW 
+  - RULE-SET,category-ads-all,🚫 广告拦截 
+  - RULE-SET,cn_domain,🟢 直连
+# --- 国内应用分流 ---
+  - RULE-SET,alibaba_domain,🟢 直连
+  - RULE-SET,tencent_domain,🟢 直连
+  - RULE-SET,bytedance_domain,🟢 直连
+  - RULE-SET,xiaomi_domain,🟢 直连
+  - MATCH,🐟 漏网之鱼
+  
+  
+rule-providers: 
+  private_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  cn_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  telegram_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  google_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  twitter_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"}
+  netflix_ip: {type: http, interval: 86400, behavior: ipcidr, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+  
+  apple_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  bilibili_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs"}
+  alibaba_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs"}
+  tencent_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tencent.mrs"}
+  xiaomi_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/xiaomi.mrs"}
+  bytedance_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance.mrs"}
+  microsoft_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  onedrive_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
+  google_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  category-entertainment_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-entertainment.mrs"}
+  category-social-media-!cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs"}
+  github_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}  
+  steam@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam@cn.mrs"}
+  steam_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
+  category-games-cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-cn.mrs"}
+  category-games-!cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-!cn.mrs"}
+  category-game-platforms-download@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-game-platforms-download@cn.mrs"}
+  category-game-platforms-download_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-game-platforms-download.mrs"}
+  category-dev-cn: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-dev-cn.mrs"}
+  category-dev: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-dev.mrs"}
+  cloudflare@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare@cn.mrs"}
+  cloudflare_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs"}
+  category-ads-all: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/privacy-protection-tools/anti-ad.github.io/master/docs/mihomo.mrs"}
+  chat_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-communication.mrs"}
+  ai_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-chat-!cn.mrs"}
+  category-games: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games.mrs"}
+  category-scholar-!cn: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-scholar-!cn.mrs"}
+  category-porn: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-porn.mrs"}
+  gfw_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"}
+  geolocation-cn: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-cn.mrs"}
+  cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}  
+  
+#自定义规则
+  direct_custom: {type: http, interval: 86400, behavior: classical, format: yaml, url: https://raw.githubusercontent.com/Mirer-1352/mihomo-rules-custom/refs/heads/main/direct_custom.yaml}
+  proxy_custom: {type: http, interval: 86400, behavior: classical, format: yaml, url: https://raw.githubusercontent.com/Mirer-1352/mihomo-rules-custom/refs/heads/main/proxy_custom.yaml}
+  download_custom: {type: http, interval: 86400, behavior: classical, format: yaml, url: https://raw.githubusercontent.com/Mirer-1352/mihomo-rules-custom/refs/heads/main/download_custom.yaml}
