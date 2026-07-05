@@ -195,10 +195,8 @@ rules:
   - AND,((NETWORK,udp),(DST-PORT,443)),⛔ 禁止
   - AND,((DOMAIN,www.baidu.com),(DST-PORT,80)),⛔ 禁止
 # --- 局域网与基础服务---
-#  - IP-CIDR,10.10.0.0/16,🕸️ 虚拟网段,no-resolve
+#  - IP-CIDR,10.10.0.0/16,🕸️ 虚拟网段,no-resolve  #子网互通
   - IP-CIDR,100.64.0.0/10,🕸️ 虚拟网段,no-resolve
-  - IP-CIDR6,fd7a::/48,🕸️ 虚拟网段,no-resolve
-  - IP-CIDR6,fe80::/10,🕸️ 虚拟网段,no-resolve
 #  - DOMAIN-SUFFIX,login.tailscale.com,🔰 主流
   - DOMAIN-SUFFIX,tailscale.com,🟢 直连
   - DOMAIN-SUFFIX,tailscale.io,🟢 直连
