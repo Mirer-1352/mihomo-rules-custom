@@ -212,16 +212,13 @@ rules:
   - RULE-SET,direct_custom,🟢 直连
   - RULE-SET,proxy_custom,🔰 主流
   - RULE-SET,download_custom,🗂 下载
-# ——在绕过中国大陆IP情况下大概率不需要这条——
-  - RULE-SET,cn_ip,🟢 直连,no-resolve
+# --- 文化娱乐 ---
+  - RULE-SET,cn_ip,🟢 直连,no-resolve  #在绕过中国大陆IP情况下大概率不需要这条
   - RULE-SET,bilibili_domain,📺 哔哩哔哩
   - RULE-SET,geolocation-cn,🟢 直连  
-# --- 应用分流 ---
-# --- 游戏与下载 (国内) ---
   - RULE-SET,category-game-platforms-download@cn_domain,🟢 直连
   - RULE-SET,steam@cn_domain,🟢 直连  
   - RULE-SET,category-games-cn_domain,🟢 直连
-# --- 游戏与下载 (国外) ---
   - RULE-SET,category-game-platforms-download_domain,🗂 下载
   - RULE-SET,steam_domain,🎮 游戏平台
   - RULE-SET,category-games-!cn_domain,🎮 游戏平台
@@ -236,20 +233,23 @@ rules:
   - RULE-SET,telegram_ip,✉️ 社交媒体,no-resolve
   - RULE-SET,chat_domain,✉️ 社交媒体
   - RULE-SET,category-social-media-!cn_domain,✉️ 社交媒体
+  - RULE-SET,media_domain,📰 新闻媒体  
   - RULE-SET,onedrive_domain,🗂 下载 
   - RULE-SET,microsoft_domain,🪟 微软
-  - RULE-SET,apple_domain,🍎 Apple  
-  - RULE-SET,category-companies@cn,🟢 直连
-  - RULE-SET,category-companies,🔰 主流
-  - RULE-SET,category-porn,🔰 主流
-  - RULE-SET,category-scholar-!cn,🔰 主流
+  - RULE-SET,apple_domain,🍎 Apple
+# --- 社会服务 ---
+  - RULE-SET,category-companies@cn_domain,🟢 直连
+  - RULE-SET,category-companies_domain,🔰 主流
   - RULE-SET,category-dev-cn,🟢 直连
   - RULE-SET,category-dev,🔰 主流
-  - RULE-SET,media_domain,📰 新闻媒体
+  - RULE-SET,category-ecommerce@cn_domain,🟢 直连
+  - RULE-SET,category-ecommerce_domain,🔰 主流
+  - RULE-SET,category-porn,🔰 主流
+  - RULE-SET,category-scholar-!cn,🔰 主流
   - RULE-SET,gfw_domain,🧱 GFW 
   - RULE-SET,category-ads-all,🚫 广告拦截 
+# --- 国内常用兜底 ---
   - RULE-SET,cn_domain,🟢 直连
-# --- 国内应用分流 ---
   - RULE-SET,alibaba_domain,🟢 直连
   - RULE-SET,tencent_domain,🟢 直连
   - RULE-SET,bytedance_domain,🟢 直连
@@ -280,6 +280,8 @@ rule-providers:
   steam@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam@cn.mrs"}
   steam_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
   media_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media.mrs"}
+  category-ecommerce_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ecommerce.mrs"}
+  category-ecommerce@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ecommerce@cn.mrs"}
   category-companies_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-companies.mrs"}
   category-companies@cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-companies@cn.mrs"}
   category-games-cn_domain: {type: http, interval: 86400, behavior: domain, format: mrs, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games-cn.mrs"}
