@@ -3,6 +3,7 @@ payload:
 - DOMAIN-SUFFIX,waterapi.bdyueheng.com
 - DOMAIN-KEYWORD,weibo
 - DOMAIN-KEYWORD,sina
+- DOMAIN-KEYWORD,ntp
 - DOMAIN-KEYWORD,nvidia
 - DOMAIN-SUFFIX,ups.fenjilab.com
 - DOMAIN-KEYWORD,mtalk.google.com
