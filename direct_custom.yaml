@@ -4,6 +4,7 @@ payload:
 - DOMAIN-KEYWORD,weibo
 - DOMAIN-KEYWORD,sina
 - DOMAIN-KEYWORD,ntp
+- DOMAIN-KEYWORD,stun
 - DOMAIN-KEYWORD,nvidia
 - DOMAIN-SUFFIX,ups.fenjilab.com
 - DOMAIN-KEYWORD,mtalk.google.com
